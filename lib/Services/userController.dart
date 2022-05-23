@@ -7,7 +7,7 @@ import 'package:shared_preferences/shared_preferences.dart';
 import '../Models/user_model.dart';
 
 class UserController{
-  Future<String?> loginController( String email, String password ) async {
+  Future<String?>? loginController( String email, String password ) async {
     final response = await http.post(Uri.parse('${URLS.URL_API}/user/authenticate'),
         headers: { 'Accept' : 'application/json' },
         body: {

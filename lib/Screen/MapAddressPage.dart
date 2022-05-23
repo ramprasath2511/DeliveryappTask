@@ -37,12 +37,12 @@ class _MapLocationAddressPageState extends State<MapLocationAddressPage> {
   Widget build(BuildContext context)
   {
     return Scaffold(
-      body: Stack(
-        children: [
-          _CreateMap(),
-          ManualMarketMap()
-        ],
-      )
+        body: Stack(
+          children: [
+            _CreateMap(),
+            ManualMarketMap()
+          ],
+        )
     );
   }
 }
@@ -54,25 +54,26 @@ class _CreateMap extends StatelessWidget {
     final mapLocation = BlocProvider.of<MylocationmapBloc>(context);
     return BlocBuilder<MylocationmapBloc, MylocationmapState>(
         builder: (context, state)
-    => ( state.existsLocation )
-        ? GoogleMap(
-      initialCameraPosition: CameraPosition(target: state.location!, zoom: 18),
-      zoomControlsEnabled: true,
-      myLocationEnabled: true,
-      myLocationButtonEnabled: true,
-      onMapCreated: mapLocation.initMapLocation,
-      onCameraMove: (position) => mapLocation.add( OnMoveMapEvent( position.target ) ),
-      onCameraIdle: (){
-        if ( state.locationCentral != null ){
-          mapLocation.add( OnGetAddressLocationEvent( mapLocation.state.location! ) );
-        }
-      },
-    )
-        : const Center(
-      child: TextDapp(text: 'Locating...'),
-    )
+        => ( state.existsLocation )
+            ? GoogleMap(
+          initialCameraPosition: CameraPosition(target: state.location!, zoom: 18),
+          zoomControlsEnabled: true,
+          myLocationEnabled: true,
+          myLocationButtonEnabled: true,
+          onMapCreated: mapLocation.initMapLocation,
+         // onCameraMove: (position) =>mapLocation.add( OnMoveMapEvent( position.target ) ),
+          onCameraIdle: (){
+            if ( state.locationCentral != null ){
+              mapLocation.add( OnGetAddressLocationEvent( mapLocation.state.location! ) );
+            }
+          },
+        )
+            : const Center(
+          child: TextDapp(text: 'Locating...'),
+        )
     );
   }
+
 
   double calculateDistance(lat1, lon1, lat2, lon2){
     var p = 0.017453292519943295;
@@ -83,6 +84,3 @@ class _CreateMap extends StatelessWidget {
   }
 
 }
-
-
-

@@ -85,8 +85,6 @@ class MylocationmapBloc extends Bloc<MylocationmapEvent, MylocationmapState> {
   Future<void> _onGetAddressLocation( OnGetAddressLocationEvent event, Emitter<MylocationmapState> emit ) async {
 
     List<Placemark> address = await placemarkFromCoordinates( event.location.latitude , event.location.longitude );
-    /*double lat1 = event.location.latitude;
-    double long1 = event.location.longitude;*/
     String direction = address[0].thoroughfare!;
     String street = address[0].subThoroughfare!;
     String city = address[0].locality!;

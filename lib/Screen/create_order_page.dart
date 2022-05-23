@@ -1,4 +1,6 @@
 import 'package:cool_alert/cool_alert.dart';
+import 'package:deliveryapp/Screen/dropoff.dart';
+import 'package:deliveryapp/Screen/pickup.dart';
 import 'package:deliveryapp/Widgets/colorsDapp.dart';
 import 'package:dropdown_button2/dropdown_button2.dart';
 import 'package:flutter/material.dart';
@@ -6,8 +8,8 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:geolocator/geolocator.dart';
 import 'package:permission_handler/permission_handler.dart';
 import 'package:shared_preferences/shared_preferences.dart';
-
 import '../Bloc/MyLocation/mylocationmap_bloc.dart';
+import '../Bloc/Pickup/pickup_bloc.dart';
 import '../Widgets/AnimationRoute.dart';
 import '../Widgets/buttonDapp.dart';
 import '../Widgets/textDapp.dart';
@@ -37,6 +39,7 @@ class _CreatOrderState extends State<CreatOrder> {
   late String pickupDetails;
   late String dropoffdetails;
   final _formKey = GlobalKey<FormState>();
+
   @override
   void initState() {
     super.initState();
@@ -44,13 +47,14 @@ class _CreatOrderState extends State<CreatOrder> {
   double? order ;
   @override
   Widget build(BuildContext context) {
+    final pickupBloc = BlocProvider.of<PickupBloc>(context);
     var size = MediaQuery.of(context).size;
     final myLocationBloc = BlocProvider.of<MylocationmapBloc>(context);
     return Scaffold(
       appBar: AppBar(
         backgroundColor: ColorsDapp.primaryColor,
         elevation: 0,
-        title: TextDapp(text: "Create Order",fontSize: 24, fontWeight: FontWeight.bold,color: Colors.white),
+        title: const TextDapp(text: "Create Order",fontSize: 24, fontWeight: FontWeight.bold,color: Colors.white),
         leadingWidth: 80,
         centerTitle: true,
         leading: InkWell(
@@ -99,7 +103,13 @@ class _CreatOrderState extends State<CreatOrder> {
                             context,
                             MaterialPageRoute(builder: (context) => MapLocationAddressPage()));
                         }else {
-                          Navigator.pop(context);
+                          ScaffoldMessenger.of(context)
+                              .showSnackBar(
+                            const SnackBar(
+                              content: Text(
+                                  'Your GPS is switched-off'),
+                            ),
+                          );
                         }
 
                       },
@@ -114,7 +124,7 @@ class _CreatOrderState extends State<CreatOrder> {
                         ),
                         child: BlocBuilder<MylocationmapBloc, MylocationmapState>(
                             builder: (_, state)
-                            => TextDapp(text: state.addressName)
+                            => TextDapp(text: state.addressName, color: ColorsDapp.primaryColor, fontSize: 17 )
                         ),
                       ),
                     ),
@@ -138,11 +148,11 @@ class _CreatOrderState extends State<CreatOrder> {
                           icon: Icon(Icons.my_location),
                           onPressed: () {}   ),),
                     ),*/
-                    Divider(
+                    const Divider(
                       thickness: 1,
                       color: Colors.grey,
                     ),
-                    SizedBox(
+                    const SizedBox(
                       height: 20,
                     ),
                     Row(
@@ -153,7 +163,7 @@ class _CreatOrderState extends State<CreatOrder> {
                           child: Column(
                             crossAxisAlignment: CrossAxisAlignment.start,
                             children: [
-                              Text(
+                              const Text(
                                 "Drop-Off Location",
                                 style: TextStyle(
                                     fontWeight: FontWeight.w500,
@@ -162,21 +172,22 @@ class _CreatOrderState extends State<CreatOrder> {
                               ),
                               InkWell(
                                 onTap: () async {
-
                                   final permissionGPS = await Permission.location.isGranted;
                                   final gpsActive = await Geolocator.isLocationServiceEnabled();
-/*
-
                                   if( permissionGPS && gpsActive ){
                                     Navigator.push(
                                       context,
-                                      MaterialPageRoute(builder: (context) => MapLocationAddressPage()),
+                                      MaterialPageRoute(builder: (context) => DropoffMapView()),
                                     );
                                   }else {
-                                    Navigator.pop(context);
+                                    ScaffoldMessenger.of(context)
+                                        .showSnackBar(
+                                      const SnackBar(
+                                        content: Text(
+                                            'Your GPS is switched-off'),
+                                      ),
+                                    );
                                   }
-*/
-
                                 },
                                 child: Container(
                                   padding: EdgeInsets.only(left: 10.0),
@@ -189,7 +200,7 @@ class _CreatOrderState extends State<CreatOrder> {
                                   ),
                                   child: BlocBuilder<MylocationmapBloc, MylocationmapState>(
                                       builder: (_, state)
-                                      => TextDapp(text: state.addressName)
+                                      => TextDapp(text:"text"),
                                   ),
                                 ),
                               ),/*BlocBuilder<MylocationmapBloc, MylocationmapState>(
