@@ -1,11 +1,12 @@
 import 'package:deliveryapp/Bloc/Auth/auth_bloc.dart';
-import 'package:deliveryapp/Screen/login_page.dart';
+import 'package:deliveryapp/Screen/Login/login_page.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
+import 'Bloc/DropLocation/droplocation_bloc.dart';
 import 'Bloc/MyLocation/mylocationmap_bloc.dart';
-import 'Screen/create_order_page.dart';
+import 'Screen/Home/create_order_page.dart';
 
 void main() {
   runApp( MyApp());
@@ -29,15 +30,14 @@ late String email, password;
         providers: [
         BlocProvider(create: (context) => AuthBloc()),
           BlocProvider(create: (context) => MylocationmapBloc()),
-
-
+          BlocProvider(create: (context) => DroplocationBloc()),
     ],
      child:
      MaterialApp(
       title: 'Delivery App',
       home: Stack(
            children:[
-        (_loginStatus == 1)? CreatOrder(""):LoginPage(),
+        (_loginStatus == 1)? CreatOrder():LoginPage(),
          ]
       ),
     ),

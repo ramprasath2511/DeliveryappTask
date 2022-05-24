@@ -1,24 +1,29 @@
+import 'dart:math';
+
 import 'package:cool_alert/cool_alert.dart';
+import 'package:deliveryapp/Screen/DropoffAddress/DropMapAddressPage.dart';
 import 'package:deliveryapp/Screen/dropoff.dart';
 import 'package:deliveryapp/Screen/pickup.dart';
 import 'package:deliveryapp/Widgets/colorsDapp.dart';
 import 'package:dropdown_button2/dropdown_button2.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:flutter_polyline_points/flutter_polyline_points.dart';
 import 'package:geolocator/geolocator.dart';
+import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:permission_handler/permission_handler.dart';
 import 'package:shared_preferences/shared_preferences.dart';
-import '../Bloc/MyLocation/mylocationmap_bloc.dart';
-import '../Widgets/AnimationRoute.dart';
-import '../Widgets/buttonDapp.dart';
-import '../Widgets/textDapp.dart';
-import 'MapAddressPage.dart';
-import 'login_page.dart';
+import '../../Bloc/DropLocation/droplocation_bloc.dart';
+import '../../Bloc/MyLocation/mylocationmap_bloc.dart';
+import '../../Widgets/AnimationRoute.dart';
+import '../../Widgets/buttonDapp.dart';
+import '../../Widgets/textDapp.dart';
+import '../CalculateKM/CalculateKm.dart';
+import '../PickupAddress/StartMapAddressPage.dart';
+import '../Login/login_page.dart';
 
 
 class CreatOrder extends StatefulWidget {
-   String? startAddress;
-   CreatOrder(this.startAddress);
 
   @override
   _CreatOrderState createState() => _CreatOrderState();
@@ -34,13 +39,11 @@ class _CreatOrderState extends State<CreatOrder> {
   ];
   int activeCategory = 0;
   static const vat = 1.2;
-  /*late TextEditingController _pickup;
-  late TextEditingController _dropoff;*/
   String? selectedValue;
   double withvat = 0.00;double withoutvat = 0.00;
-  late String pickupDetails;
-  late String dropoffdetails;
   final _formKey = GlobalKey<FormState>();
+  String? _placeDistance;
+  static const API_KEY = 'AIzaSyBqlJIGSpBWy4Rseoxdkbi0dOR_yXIvL6g';
 
   @override
   void initState() {
@@ -49,8 +52,8 @@ class _CreatOrderState extends State<CreatOrder> {
   double? order ;
   @override
   Widget build(BuildContext context) {
+    final dropLocationBloc = BlocProvider.of<DroplocationBloc>(context);
     var size = MediaQuery.of(context).size;
-    final myLocationBloc = BlocProvider.of<MylocationmapBloc>(context);
     return Scaffold(
       appBar: AppBar(
         backgroundColor: ColorsDapp.primaryColor,
@@ -157,7 +160,7 @@ class _CreatOrderState extends State<CreatOrder> {
                                   if( permissionGPS && gpsActive ){
                                     Navigator.push(
                                       context,
-                                      MaterialPageRoute(builder: (context) => DropoffMapView()),
+                                      MaterialPageRoute(builder: (context) => DropLocationAddressPage()),
                                     );
                                   }else {
                                     ScaffoldMessenger.of(context)
@@ -178,54 +181,12 @@ class _CreatOrderState extends State<CreatOrder> {
 
                                       borderRadius: BorderRadius.circular(5.0)
                                   ),
-                                  child: BlocBuilder<MylocationmapBloc, MylocationmapState>(
+                                  child: BlocBuilder<DroplocationBloc, DroplocationState>(
                                       builder: (_, state)
-                                      => TextDapp(text:"text"),
+                                      => TextDapp(text: state.addressName, color: ColorsDapp.primaryColor, fontSize: 17 ),
                                   ),
                                 ),
-                              ),/*BlocBuilder<MylocationmapBloc, MylocationmapState>(
-                            builder: (_, state)
-                            => TextFormField(
-                                controller: _dropoff,
-                                cursorColor: Colors.black,
-                                validator: (val) {
-                                  if(val!.isEmpty) {
-                                    return "Select Drop-off location";
-                                  }
-                                  return null;
-                                },
-                                onSaved: (val) {
-                                  dropoffdetails = val! ;
-                                },
-                                style: TextStyle(
-                                    fontSize: 17,
-                                    fontWeight: FontWeight.bold,
-                                    color: Colors.black),
-                                decoration: InputDecoration(
-                                    hintText: "Enter Drop-off location",
-                                    border: InputBorder.none,
-                                  suffixIcon: IconButton(
-                                      icon: Icon(Icons.my_location),
-                                      onPressed: ()  async {
-                                        final permissionGPS = await Permission.location.isGranted;
-                                        final gpsActive = await Geolocator.isLocationServiceEnabled();
-                                        if( permissionGPS && gpsActive ){
-                                          Navigator.push(
-                                            context,
-                                            MaterialPageRoute(builder: (context) => MapLocationAddressPage()),
-                                          );
-                                        }else {
-                                          Navigator.pop(context);
-                                        }
-
-                                      },  ),),
-                              ),),*/
-
-                            ],
-                          ),
-                        ),
-                      ],
-                    ),
+                              ),
                     Divider(
                       thickness: 1,
                       color: Colors.grey,
@@ -233,6 +194,21 @@ class _CreatOrderState extends State<CreatOrder> {
                     SizedBox(
                       height: 20,
                     ),
+                          Row(
+                            mainAxisAlignment: MainAxisAlignment.center,
+                            children: [
+                              Visibility(
+                                visible: _placeDistance == null ? false : true,
+                                child: Text(
+                                  'DISTANCE: $_placeDistance km',
+                                  style: TextStyle(
+                                    fontSize: 16,
+                                    fontWeight: FontWeight.bold,
+                                  ),
+                                ),
+                              ),
+                              ]),
+                              SizedBox(height: 15),
                     DropdownButtonFormField2(
                       value: selectedValue,
                       decoration: InputDecoration(
@@ -284,10 +260,7 @@ class _CreatOrderState extends State<CreatOrder> {
                       onChanged: (value) {
                         setState(() {
                           selectedValue = value.toString();
-                          double result  =  ((int.parse(selectedValue!)) * 32)/100;
-                          withvat = result*vat;
-                          withoutvat =result/vat;
-                          print(result);
+
                         });
                       },
                       onSaved: (value) {
@@ -365,37 +338,116 @@ class _CreatOrderState extends State<CreatOrder> {
                     SizedBox(
                       height: 40,
                     ),
+                              BlocBuilder<MylocationmapBloc, MylocationmapState>(
+                                builder: (_, state)=>
                     ButtonDapp(
                       text: 'Order',
                       fontSize: 21,
                       height: 50,
                       fontWeight: FontWeight.w500, color: ColorsDapp.primaryColor,
-                      onPressed: () {
+                      onPressed: () async{
                         if( _formKey.currentState!.validate() ){
+    _calculateDistance(state.locationCentral!.latitude, state.locationCentral!.longitude, dropLocationBloc.state.locationCentral!.latitude, dropLocationBloc.state.locationCentral!.longitude ).then((isCalculated) {
+    if (isCalculated) {
+    ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text('Distance Calculated Sucessfully'),),);
+    } else {
+    ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text('Error Calculating Distance'),),);
+    }
+    });
+
+    double result  =  ((int.parse(selectedValue!) * num.parse(_placeDistance!)))/100;
+    withvat = result*vat;
+    withoutvat =result/vat;
+    print(result);
                           CoolAlert.show(
                             context: context,
                             type: CoolAlertType.success,
-                            text: "Your order was successful!",
+                            text: "Calculated your order successful!",
                             autoCloseDuration: const Duration(seconds: 3),
                             backgroundColor: ColorsDapp.primaryColor,
                               confirmBtnColor: ColorsDapp.primaryColor,
 
                           );
                         }
-                      },
-                    ),
+    },
+                    ),),
     ],
     ),
     ),
     ]),
+    ]),
     ),
-    ),
-    );
+    ],),),),);
   }
   _savePref(int value) async {
     SharedPreferences preferences = await SharedPreferences.getInstance();
     preferences.setInt("value", value);
     preferences.commit();
   }
+Future<bool> _calculateDistance(double startLatitude, double startLongitude, double destinationLatitude,
+    double destinationLongitude) async {
+  try {
+    await _createPolylines(startLatitude, startLongitude, destinationLatitude,
+        destinationLongitude);
 
+    double totalDistance = 0.0;
+
+    // Calculating the total distance by adding the distance
+    // between small segments
+    for (int i = 0; i < polylineCoordinates.length - 1; i++) {
+      totalDistance += _coordinateDistance(
+        polylineCoordinates[i].latitude,
+        polylineCoordinates[i].longitude,
+        polylineCoordinates[i + 1].latitude,
+        polylineCoordinates[i + 1].longitude,
+      );
+    }
+
+    setState(() {
+      _placeDistance = totalDistance.toStringAsFixed(2);
+      print('DISTANCE: $_placeDistance km');
+    });
+
+    return true;
+  } catch (e) {
+    print(e);
+  }
+  return false;
+}
+double _coordinateDistance(lat1, lon1, lat2, lon2) {
+  var p = 0.017453292519943295;
+  var c = cos;
+  var a = 0.5 -
+      c((lat2 - lat1) * p) / 2 +
+      c(lat1 * p) * c(lat2 * p) * (1 - c((lon2 - lon1) * p)) / 2;
+  return 12742 * asin(sqrt(a));
+}
+
+// Create the polylines for showing the route between two places
+_createPolylines(double startLatitude,
+    double startLongitude,
+    double destinationLatitude,
+    double destinationLongitude,) async {
+  polylinePoints = PolylinePoints();
+  PolylineResult result = await polylinePoints.getRouteBetweenCoordinates(
+    API_KEY, // Google Maps API Key
+    PointLatLng(startLatitude, startLongitude),
+    PointLatLng(destinationLatitude, destinationLongitude),
+    travelMode: TravelMode.transit,
+  );
+
+  if (result.points.isNotEmpty) {
+    result.points.forEach((PointLatLng point) {
+      polylineCoordinates.add(LatLng(point.latitude, point.longitude));
+    });
+  }
+
+  PolylineId id = PolylineId('poly');
+  Polyline polyline = Polyline(
+    polylineId: id,
+    points: polylineCoordinates,
+    width: 3,
+  );
+  polylines[id] = polyline;
+}
 }

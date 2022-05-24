@@ -3,26 +3,26 @@ import 'dart:math';
 import 'package:flutter/material.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import '../Bloc/MyLocation/mylocationmap_bloc.dart';
-import '../Widgets/ManualMarketMap.dart';
-import '../Widgets/textDapp.dart';
+import '../../Bloc/DropLocation/droplocation_bloc.dart';
+import 'DropManualMarket.dart';
+import '../../Widgets/textDapp.dart';
 
-class StartLocationAddressPage extends StatefulWidget {
+class DropLocationAddressPage extends StatefulWidget {
   @override
-  _StartLocationAddressPageState createState() => _StartLocationAddressPageState();
+  _DropLocationAddressPageState createState() => _DropLocationAddressPageState();
 }
-class _StartLocationAddressPageState extends State<StartLocationAddressPage> {
-  late MylocationmapBloc mylocationmapBloc;
+class _DropLocationAddressPageState extends State<DropLocationAddressPage> {
+  late DroplocationBloc dropLocationBloc;
   @override
   void initState() {
-    mylocationmapBloc = BlocProvider.of<MylocationmapBloc>(context);
-    mylocationmapBloc.initialLocation();
+    dropLocationBloc = BlocProvider.of<DroplocationBloc>(context);
+    dropLocationBloc.initialLocation();
     super.initState();
     super.initState();
   }
   @override
   void dispose() {
-    mylocationmapBloc.cancelLocation();
+    dropLocationBloc.cancelLocation();
     super.dispose();
   }
   @override
@@ -32,7 +32,7 @@ class _StartLocationAddressPageState extends State<StartLocationAddressPage> {
         body: Stack(
           children: [
             CreateMap(),
-            ManualMarketMap()
+            DropManualMarketMap()
           ],
         )
     );
@@ -49,9 +49,9 @@ class _CreateMapState extends State<CreateMap> {
   @override
   Widget build(BuildContext context) {
 
-    final mapLocation = BlocProvider.of<MylocationmapBloc>(context);
+    final mapLocation = BlocProvider.of<DroplocationBloc>(context);
 
-    return BlocBuilder<MylocationmapBloc, MylocationmapState>(
+    return BlocBuilder<DroplocationBloc, DroplocationState>(
         builder: (context, state)
         => ( state.existsLocation )
             ? GoogleMap(

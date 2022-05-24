@@ -1,35 +1,32 @@
 
-import 'package:deliveryapp/Screen/create_order_page.dart';
+import 'package:deliveryapp/Screen/Home/create_order_page.dart';
 import 'package:deliveryapp/Widgets/textDapp.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import '../../Bloc/DropLocation/droplocation_bloc.dart';
+import '../../Widgets/AnimationRoute.dart';
+import '../../Widgets/colorsDapp.dart';
 
-import '../Bloc/MyLocation/mylocationmap_bloc.dart';
-import 'AnimationRoute.dart';
-import 'colorsDapp.dart';
-
-class ManualMarketMap extends StatelessWidget {
+class DropManualMarketMap extends StatelessWidget {
 
   @override
   Widget build(BuildContext context)
   {
-    return BlocBuilder<MylocationmapBloc, MylocationmapState>(
+    return BlocBuilder<DroplocationBloc, DroplocationState>(
         builder: (context, state)
         => ( state.existsLocation )
             ? _buildStackMarket(context)
             : Container()
     );
   }
-
-
   Widget _buildStackMarket(BuildContext context){
 
-    final myLocationBloc = BlocProvider.of<MylocationmapBloc>(context);
+    final dropLocationBloc = BlocProvider.of<DroplocationBloc>(context);
 
     return Stack(
       children: [
-        
+
         Positioned(
           top: 50,
           left: 20,
@@ -47,17 +44,17 @@ class ManualMarketMap extends StatelessWidget {
                 ),
                 Container(
                   alignment: Alignment.center,
-                  width: MediaQuery.of(context).size.width * .75,  
+                  width: MediaQuery.of(context).size.width * .75,
                   padding: EdgeInsets.symmetric(vertical: 11.0, horizontal: 8),
                   margin: EdgeInsets.only(left: 15.0),
                   decoration: BoxDecoration(
-                    borderRadius: BorderRadius.circular(8.0),
-                    color: Colors.white,
-                    boxShadow: [
-                      BoxShadow(color: Colors.grey, blurRadius: 10, spreadRadius: -5)
-                    ]
+                      borderRadius: BorderRadius.circular(8.0),
+                      color: Colors.white,
+                      boxShadow: [
+                        BoxShadow(color: Colors.grey, blurRadius: 10, spreadRadius: -5)
+                      ]
                   ),
-                  child: BlocBuilder<MylocationmapBloc, MylocationmapState>(
+                  child: BlocBuilder<DroplocationBloc, DroplocationState>(
                       builder: (_, state)
                       => TextDapp(text: state.addressName, color: ColorsDapp.primaryColor, fontSize: 17 )
                   ),
@@ -69,26 +66,26 @@ class ManualMarketMap extends StatelessWidget {
 
         Center(
           child: Transform.translate(
-            offset: Offset(0, -15),
-            child: Icon(Icons.location_on, size: 50)
+              offset: Offset(0, -15),
+              child: Icon(Icons.location_on, size: 50)
           ),
         ),
 
         Positioned(
-          bottom: 70,
-          left: 40,
-          child: MaterialButton(
-            padding: EdgeInsets.symmetric(vertical: 15.0),
-            minWidth: MediaQuery.of(context).size.width - 80,
-            color: ColorsDapp.primaryColor,
-            shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10.0)),
-            child: TextDapp(text: 'Confirm Address', color: Colors.white, fontSize: 17,),
-            onPressed: (){
-              if( myLocationBloc.state.addressName != '' ){
-                Navigator.pushReplacement(context, routeDapp(page: CreatOrder("")));
-               }
-            },
-          )
+            bottom: 70,
+            left: 40,
+            child: MaterialButton(
+              padding: EdgeInsets.symmetric(vertical: 15.0),
+              minWidth: MediaQuery.of(context).size.width - 80,
+              color: ColorsDapp.primaryColor,
+              shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10.0)),
+              child: TextDapp(text: 'Confirm Address', color: Colors.white, fontSize: 17,),
+              onPressed: (){
+                if( dropLocationBloc.state.addressName != '' ){
+                  Navigator.pushReplacement(context, routeDapp(page: CreatOrder()));
+                }
+              },
+            )
         )
       ],
     );
