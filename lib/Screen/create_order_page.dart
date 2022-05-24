@@ -9,7 +9,6 @@ import 'package:geolocator/geolocator.dart';
 import 'package:permission_handler/permission_handler.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import '../Bloc/MyLocation/mylocationmap_bloc.dart';
-import '../Bloc/Pickup/pickup_bloc.dart';
 import '../Widgets/AnimationRoute.dart';
 import '../Widgets/buttonDapp.dart';
 import '../Widgets/textDapp.dart';
@@ -18,6 +17,9 @@ import 'login_page.dart';
 
 
 class CreatOrder extends StatefulWidget {
+   String? startAddress;
+   CreatOrder(this.startAddress);
+
   @override
   _CreatOrderState createState() => _CreatOrderState();
 }
@@ -47,7 +49,6 @@ class _CreatOrderState extends State<CreatOrder> {
   double? order ;
   @override
   Widget build(BuildContext context) {
-    final pickupBloc = BlocProvider.of<PickupBloc>(context);
     var size = MediaQuery.of(context).size;
     final myLocationBloc = BlocProvider.of<MylocationmapBloc>(context);
     return Scaffold(
@@ -101,7 +102,7 @@ class _CreatOrderState extends State<CreatOrder> {
                         if( permissionGPS && gpsActive ){
                           Navigator.push(
                             context,
-                            MaterialPageRoute(builder: (context) => MapLocationAddressPage()));
+                            MaterialPageRoute(builder: (context) => StartLocationAddressPage()));
                         }else {
                           ScaffoldMessenger.of(context)
                               .showSnackBar(
@@ -111,7 +112,6 @@ class _CreatOrderState extends State<CreatOrder> {
                             ),
                           );
                         }
-
                       },
                       child: Container(
                         padding: EdgeInsets.only(left: 10.0),
@@ -128,26 +128,6 @@ class _CreatOrderState extends State<CreatOrder> {
                         ),
                       ),
                     ),
-                    /*TextFormField(
-                      autocorrect: false,
-                      controller: _pickup,
-                      cursorColor: Colors.black,
-                      validator: (val) {
-                        if(val!.isEmpty) {
-                          return "Enter a PickupLocation";
-                        }
-                        return null;
-                      },
-                      onSaved: (val) {
-                        pickupDetails = val!;
-                      },
-                      style: TextStyle(
-                          fontSize: 17, fontWeight: FontWeight.bold, color: Colors.black),
-                      decoration: InputDecoration(
-                          hintText: "Enter Pick-up Location", border: InputBorder.none, suffixIcon: IconButton(
-                          icon: Icon(Icons.my_location),
-                          onPressed: () {}   ),),
-                    ),*/
                     const Divider(
                       thickness: 1,
                       color: Colors.grey,

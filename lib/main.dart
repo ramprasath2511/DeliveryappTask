@@ -1,5 +1,4 @@
 import 'package:deliveryapp/Bloc/Auth/auth_bloc.dart';
-import 'package:deliveryapp/Bloc/Pickup/pickup_bloc.dart';
 import 'package:deliveryapp/Screen/login_page.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -30,7 +29,7 @@ late String email, password;
         providers: [
         BlocProvider(create: (context) => AuthBloc()),
           BlocProvider(create: (context) => MylocationmapBloc()),
-          BlocProvider(create: (context) => PickupBloc()),
+
 
     ],
      child:
@@ -38,7 +37,7 @@ late String email, password;
       title: 'Delivery App',
       home: Stack(
            children:[
-        (_loginStatus == 1)? CreatOrder():LoginPage(),
+        (_loginStatus == 1)? CreatOrder(""):LoginPage(),
          ]
       ),
     ),

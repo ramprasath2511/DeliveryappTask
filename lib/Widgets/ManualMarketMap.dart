@@ -85,7 +85,7 @@ class ManualMarketMap extends StatelessWidget {
             child: TextDapp(text: 'Confirm Address', color: Colors.white, fontSize: 17,),
             onPressed: (){
               if( myLocationBloc.state.addressName != '' ){
-                Navigator.pushReplacement(context, routeDapp(page: CreatOrder()));
+                Navigator.pushReplacement(context, routeDapp(page: CreatOrder("")));
                }
             },
           )
@@ -93,4 +93,5 @@ class ManualMarketMap extends StatelessWidget {
       ],
     );
   }
+
 }

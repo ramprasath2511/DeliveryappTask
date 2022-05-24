@@ -21,7 +21,8 @@ class _DropoffMapViewState extends State<DropoffMapView> {
   late Position _currentPosition;
   String _currentAddress = '';
 
-    late TextEditingController startAddressController ;
+    final
+    startAddressController = TextEditingController();
   final destinationAddressController = TextEditingController();
 
   final startAddressFocusNode = FocusNode();
@@ -510,7 +511,7 @@ class _DropoffMapViewState extends State<DropoffMapView> {
                                 Navigator.push(
                                     context,
                                     MaterialPageRoute(
-                                        builder: (context) => CreatOrder()));
+                                        builder: (context) => CreatOrder("")));
                               }else{
                                 ScaffoldMessenger.of(context)
                                     .showSnackBar(

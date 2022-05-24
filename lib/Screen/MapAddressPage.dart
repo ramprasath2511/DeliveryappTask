@@ -7,16 +7,12 @@ import '../Bloc/MyLocation/mylocationmap_bloc.dart';
 import '../Widgets/ManualMarketMap.dart';
 import '../Widgets/textDapp.dart';
 
-
-class MapLocationAddressPage extends StatefulWidget {
+class StartLocationAddressPage extends StatefulWidget {
   @override
-  _MapLocationAddressPageState createState() => _MapLocationAddressPageState();
+  _StartLocationAddressPageState createState() => _StartLocationAddressPageState();
 }
-
-class _MapLocationAddressPageState extends State<MapLocationAddressPage> {
-
+class _StartLocationAddressPageState extends State<StartLocationAddressPage> {
   late MylocationmapBloc mylocationmapBloc;
-
   @override
   void initState() {
     mylocationmapBloc = BlocProvider.of<MylocationmapBloc>(context);
@@ -24,47 +20,55 @@ class _MapLocationAddressPageState extends State<MapLocationAddressPage> {
     super.initState();
     super.initState();
   }
-
-
   @override
   void dispose() {
     mylocationmapBloc.cancelLocation();
     super.dispose();
   }
-
-
   @override
   Widget build(BuildContext context)
   {
     return Scaffold(
         body: Stack(
           children: [
-            _CreateMap(),
+            CreateMap(),
             ManualMarketMap()
           ],
         )
     );
   }
 }
+class CreateMap extends StatefulWidget {
+  @override
+  _CreateMapState createState() => _CreateMapState();
+}
 
-class _CreateMap extends StatelessWidget {
-
+class _CreateMapState extends State<CreateMap> {
+  Set<Marker> markers = {};
+  late GoogleMapController mapController;
   @override
   Widget build(BuildContext context) {
+
     final mapLocation = BlocProvider.of<MylocationmapBloc>(context);
+
     return BlocBuilder<MylocationmapBloc, MylocationmapState>(
         builder: (context, state)
         => ( state.existsLocation )
             ? GoogleMap(
+          markers: Set<Marker>.from(markers),
           initialCameraPosition: CameraPosition(target: state.location!, zoom: 18),
-          zoomControlsEnabled: true,
           myLocationEnabled: true,
-          myLocationButtonEnabled: true,
-          onMapCreated: mapLocation.initMapLocation,
-         // onCameraMove: (position) =>mapLocation.add( OnMoveMapEvent( position.target ) ),
+          myLocationButtonEnabled: false,
+          mapType: MapType.normal,
+          zoomGesturesEnabled: true,
+          zoomControlsEnabled: false,
+          onMapCreated: (GoogleMapController controller) {
+            mapController = controller;
+          },
+          onCameraMove: (position) => mapLocation.add( OnMoveMapEvent( position.target ) ),
           onCameraIdle: (){
             if ( state.locationCentral != null ){
-              mapLocation.add( OnGetAddressLocationEvent( mapLocation.state.location! ) );
+              mapLocation.add( OnGetAddressLocationEvent( mapLocation.state.locationCentral! ) );
             }
           },
         )
@@ -74,13 +78,5 @@ class _CreateMap extends StatelessWidget {
     );
   }
 
-
-  double calculateDistance(lat1, lon1, lat2, lon2){
-    var p = 0.017453292519943295;
-    var a = 0.5 - cos((lat2 - lat1) * p)/2 +
-        cos(lat1 * p) * cos(lat2 * p) *
-            (1 - cos((lon2 - lon1) * p))/2;
-    return 12742 * asin(sqrt(a));
-  }
-
 }
+
