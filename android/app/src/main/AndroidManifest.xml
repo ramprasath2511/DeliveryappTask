@@ -2,7 +2,6 @@
     package="com.example.deliveryapp">
     <!-- Permissions Internet -->
     <uses-permission android:name="android.permission.INTERNET"/>
-    <uses-permission android:name="android.permission.INTERNET"/>
     <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE"/>
     <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE"/>
     <!-- Permissions options for the `location` group -->
@@ -10,16 +9,12 @@
     <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION" />
     <uses-permission android:name="android.permission.ACCESS_BACKGROUND_LOCATION" />
 
-    <!-- Permissions Phone State -->
-    <uses-permission android:name="android.permission.READ_PHONE_STATE"/>
-    <uses-permission android:name="android.permission.WAKE_LOCK"/>
-
    <application
         android:label="deliveryapp"
         android:name="${applicationName}"
         android:icon="@mipmap/ic_launcher">
        <meta-data android:name="com.google.android.geo.API_KEY"
-           android:value="API-Key"/>
+           android:value="AIzaSyBqlJIGSpBWy4Rseoxdkbi0dOR_yXIvL6g"/>
            <!--//APi-key"/>-->
         <activity
             android:name=".MainActivity"

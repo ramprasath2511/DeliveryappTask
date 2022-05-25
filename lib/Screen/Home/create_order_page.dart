@@ -65,6 +65,9 @@ class _CreatOrderState extends State<CreatOrder> {
 
           onTap: () {
             _savePref(0);
+            Navigator.push(
+                context,
+                MaterialPageRoute(builder: (context) => LoginPage()));
             },
           child: Row(
             children: const [
@@ -341,33 +344,40 @@ class _CreatOrderState extends State<CreatOrder> {
                               BlocBuilder<MylocationmapBloc, MylocationmapState>(
                                 builder: (_, state)=>
                     ButtonDapp(
-                      text: 'Order',
+                      text: 'Calculate Travel Price',
                       fontSize: 21,
                       height: 50,
                       fontWeight: FontWeight.w500, color: ColorsDapp.primaryColor,
                       onPressed: () async{
                         if( _formKey.currentState!.validate() ){
+                          setState(() {
+                            if (polylines.isNotEmpty)
+                              polylines.clear();
+                            if (polylineCoordinates.isNotEmpty)
+                              polylineCoordinates.clear();
+                            _placeDistance = null;
+                          });
     _calculateDistance(state.locationCentral!.latitude, state.locationCentral!.longitude, dropLocationBloc.state.locationCentral!.latitude, dropLocationBloc.state.locationCentral!.longitude ).then((isCalculated) {
     if (isCalculated) {
+      double result  =  ((int.parse(selectedValue!) * num.parse(_placeDistance!)))/100;
+      withvat = result*vat;
+      withoutvat =result/vat;
+      print(result);
     ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text('Distance Calculated Sucessfully'),),);
     } else {
     ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text('Error Calculating Distance'),),);
     }
     });
 
-    double result  =  ((int.parse(selectedValue!) * num.parse(_placeDistance!)))/100;
-    withvat = result*vat;
-    withoutvat =result/vat;
-    print(result);
-                          CoolAlert.show(
+    /* CoolAlert.show(
                             context: context,
                             type: CoolAlertType.success,
                             text: "Calculated your order successful!",
-                            autoCloseDuration: const Duration(seconds: 3),
+                            autoCloseDuration: const Duration(seconds: 1),
                             backgroundColor: ColorsDapp.primaryColor,
                               confirmBtnColor: ColorsDapp.primaryColor,
 
-                          );
+                          );*/
                         }
     },
                     ),),
