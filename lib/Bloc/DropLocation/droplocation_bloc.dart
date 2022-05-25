@@ -2,6 +2,7 @@ import 'dart:async';
 import 'dart:convert';
 
 import 'package:bloc/bloc.dart';
+import 'package:equatable/equatable.dart';
 import 'package:geocoding/geocoding.dart';
 import 'package:meta/meta.dart';
 import 'package:geolocator/geolocator.dart';
@@ -43,8 +44,7 @@ class DroplocationBloc extends Bloc<DroplocationEvent, DroplocationState> {
   void initMapLocation( GoogleMapController controller ){
 
     if( !state.mapReady ){
-      this._mapController = controller;
-      // Change Style from Map
+      _mapController = controller;
       _mapController.setMapStyle( jsonEncode( themeMapsDapp ));
 
       add( OnMapReadyEvent() );

@@ -8,6 +8,8 @@ import 'StartManualMarket.dart';
 import '../../Widgets/textDapp.dart';
 
 class StartLocationAddressPage extends StatefulWidget {
+  const StartLocationAddressPage({Key? key}) : super(key: key);
+
   @override
   _StartLocationAddressPageState createState() => _StartLocationAddressPageState();
 }
@@ -30,7 +32,7 @@ class _StartLocationAddressPageState extends State<StartLocationAddressPage> {
   {
     return Scaffold(
         body: Stack(
-          children: [
+          children: const [
             CreateMap(),
             StartManualMarketMap()
           ],
@@ -39,6 +41,8 @@ class _StartLocationAddressPageState extends State<StartLocationAddressPage> {
   }
 }
 class CreateMap extends StatefulWidget {
+  const CreateMap({Key? key}) : super(key: key);
+
   @override
   _CreateMapState createState() => _CreateMapState();
 }
@@ -53,7 +57,7 @@ class _CreateMapState extends State<CreateMap> {
 
     return BlocBuilder<MylocationmapBloc, MylocationmapState>(
         builder: (context, state)
-        => ( state.existsLocation )
+        => ( state.locationExists )
             ? GoogleMap(
           markers: Set<Marker>.from(markers),
           initialCameraPosition: CameraPosition(target: state.location!, zoom: 18),

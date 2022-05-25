@@ -8,6 +8,8 @@ import 'DropManualMarket.dart';
 import '../../Widgets/textDapp.dart';
 
 class DropLocationAddressPage extends StatefulWidget {
+  const DropLocationAddressPage({Key? key}) : super(key: key);
+
   @override
   _DropLocationAddressPageState createState() => _DropLocationAddressPageState();
 }
@@ -30,7 +32,7 @@ class _DropLocationAddressPageState extends State<DropLocationAddressPage> {
   {
     return Scaffold(
         body: Stack(
-          children: [
+          children: const [
             CreateMap(),
             DropManualMarketMap()
           ],
@@ -39,6 +41,8 @@ class _DropLocationAddressPageState extends State<DropLocationAddressPage> {
   }
 }
 class CreateMap extends StatefulWidget {
+  const CreateMap({Key? key}) : super(key: key);
+
   @override
   _CreateMapState createState() => _CreateMapState();
 }
@@ -53,7 +57,7 @@ class _CreateMapState extends State<CreateMap> {
 
     return BlocBuilder<DroplocationBloc, DroplocationState>(
         builder: (context, state)
-        => ( state.existsLocation )
+        => ( state.locationExists )
             ? GoogleMap(
           markers: Set<Marker>.from(markers),
           initialCameraPosition: CameraPosition(target: state.location!, zoom: 18),

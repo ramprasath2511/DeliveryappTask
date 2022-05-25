@@ -9,10 +9,12 @@ import 'Bloc/MyLocation/mylocationmap_bloc.dart';
 import 'Screen/Home/create_order_page.dart';
 
 void main() {
-  runApp( MyApp());
+  runApp( const MyApp());
 }
 
 class MyApp extends StatefulWidget {
+  const MyApp({Key? key}) : super(key: key);
+
   @override
   State<MyApp> createState() => _MyAppState();
 }
@@ -37,7 +39,7 @@ late String email, password;
       title: 'Delivery App',
       home: Stack(
            children:[
-        (_loginStatus == 1)? CreatOrder():LoginPage(),
+        (_loginStatus == 1)? const CreateOrder():const LoginPage(),
          ]
       ),
     ),

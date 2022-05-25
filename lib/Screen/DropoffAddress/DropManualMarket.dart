@@ -1,7 +1,6 @@
 
 import 'package:deliveryapp/Screen/Home/create_order_page.dart';
 import 'package:deliveryapp/Widgets/textDapp.dart';
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import '../../Bloc/DropLocation/droplocation_bloc.dart';
@@ -9,13 +8,15 @@ import '../../Widgets/AnimationRoute.dart';
 import '../../Widgets/colorsDapp.dart';
 
 class DropManualMarketMap extends StatelessWidget {
+  const DropManualMarketMap({Key? key}) : super(key: key);
+
 
   @override
   Widget build(BuildContext context)
   {
     return BlocBuilder<DroplocationBloc, DroplocationState>(
         builder: (context, state)
-        => ( state.existsLocation )
+        => ( state.locationExists )
             ? _buildStackMarket(context)
             : Container()
     );
@@ -45,12 +46,12 @@ class DropManualMarketMap extends StatelessWidget {
                 Container(
                   alignment: Alignment.center,
                   width: MediaQuery.of(context).size.width * .75,
-                  padding: EdgeInsets.symmetric(vertical: 11.0, horizontal: 8),
-                  margin: EdgeInsets.only(left: 15.0),
+                  padding: const EdgeInsets.symmetric(vertical: 11.0, horizontal: 8),
+                  margin: const EdgeInsets.only(left: 15.0),
                   decoration: BoxDecoration(
                       borderRadius: BorderRadius.circular(8.0),
                       color: Colors.white,
-                      boxShadow: [
+                      boxShadow: const [
                         BoxShadow(color: Colors.grey, blurRadius: 10, spreadRadius: -5)
                       ]
                   ),
@@ -66,8 +67,8 @@ class DropManualMarketMap extends StatelessWidget {
 
         Center(
           child: Transform.translate(
-              offset: Offset(0, -15),
-              child: Icon(Icons.location_on, size: 50)
+              offset: const Offset(0, -15),
+              child: const Icon(Icons.location_on, size: 50)
           ),
         ),
 
@@ -75,14 +76,14 @@ class DropManualMarketMap extends StatelessWidget {
             bottom: 70,
             left: 40,
             child: MaterialButton(
-              padding: EdgeInsets.symmetric(vertical: 15.0),
+              padding: const EdgeInsets.symmetric(vertical: 15.0),
               minWidth: MediaQuery.of(context).size.width - 80,
               color: ColorsDapp.primaryColor,
               shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10.0)),
-              child: TextDapp(text: 'Confirm Address', color: Colors.white, fontSize: 17,),
+              child: const TextDapp(text: 'Confirm Address', color: Colors.white, fontSize: 17,),
               onPressed: (){
                 if( dropLocationBloc.state.addressName != '' ){
-                  Navigator.pushReplacement(context, routeDapp(page: CreatOrder()));
+                  Navigator.pushReplacement(context, routeDapp(page: const CreateOrder()));
                 }
               },
             )

@@ -1,16 +1,16 @@
 part of 'droplocation_bloc.dart';
 
 @immutable
-class DroplocationState {
+class DroplocationState extends Equatable{
 
-  final bool existsLocation;
+  final bool locationExists;
   final LatLng? location;
   final bool mapReady;
   final LatLng? locationCentral;
   final String addressName;
 
-  DroplocationState({
-    this.existsLocation = false,
+  const DroplocationState({
+    this.locationExists = false,
     this.location,
     this.mapReady = false,
     this.locationCentral,
@@ -19,12 +19,15 @@ class DroplocationState {
 
   DroplocationState copyWith({ bool? existsLocation, LatLng? location, bool? mapReady, LatLng? locationCentral, String? addressName })
   => DroplocationState(
-      existsLocation: existsLocation ?? this.existsLocation,
+      locationExists: existsLocation ?? this.locationExists,
       location: location ?? this.location,
       mapReady: mapReady ?? this.mapReady,
       locationCentral: locationCentral ?? this.locationCentral,
       addressName: addressName ?? this.addressName
   );
+
+  @override
+  List<Object?> get props => [locationExists,location, mapReady, locationCentral,addressName  ];
 
 }
 

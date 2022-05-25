@@ -6,22 +6,22 @@ String userToJson(LocationModel data) => json.encode(data.toJson());
 
 class LocationModel {
   LocationModel({
-     this.startAddress,
-    this.endAddress
+     this.pickupAddress,
+    this.dropoffAddress
   });
 
-  String? startAddress;
-String? endAddress;
+  String? pickupAddress;
+String? dropoffAddress;
 
 
   factory LocationModel.fromJson(Map<String, dynamic> json) => LocationModel(
-      startAddress: json["startAddress"],
-    endAddress: json["endAddress"]
+      pickupAddress: json["pickupAddress"],
+    dropoffAddress: json["dropoffAddress"]
   );
 
   Map<String, dynamic> toJson() => {
-    "startAddress": startAddress,
-    "endAddress": endAddress
+    "pickupAddress": pickupAddress,
+    "dropoffAddress": dropoffAddress
   };
 }
 

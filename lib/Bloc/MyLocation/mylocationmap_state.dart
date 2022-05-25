@@ -1,16 +1,16 @@
 part of 'mylocationmap_bloc.dart';
 
 @immutable
-class MylocationmapState {
+class MylocationmapState extends Equatable {
 
-  final bool existsLocation;
+  final bool locationExists;
   final LatLng? location;
   final bool mapReady;
   final LatLng? locationCentral;
   final String addressName;
 
-  MylocationmapState({
-    this.existsLocation = false,
+  const MylocationmapState({
+    this.locationExists = false,
     this.location,
     this.mapReady = false,
     this.locationCentral,
@@ -19,12 +19,15 @@ class MylocationmapState {
 
   MylocationmapState copyWith({ bool? existsLocation, LatLng? location, bool? mapReady, LatLng? locationCentral, String? addressName })
     => MylocationmapState(
-      existsLocation: existsLocation ?? this.existsLocation,
+      locationExists: existsLocation ?? locationExists,
       location: location ?? this.location,
       mapReady: mapReady ?? this.mapReady,
       locationCentral: locationCentral ?? this.locationCentral,
       addressName: addressName ?? this.addressName
     );
+
+  @override
+  List<Object?> get props => [locationExists,location, mapReady, locationCentral,addressName  ];
 
 }
 

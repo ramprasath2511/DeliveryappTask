@@ -1,15 +1,13 @@
 import 'dart:convert';
 import 'package:http/http.dart' as http;
 import 'package:deliveryapp/Models/message_model.dart';
-import 'package:deliveryapp/Services/url.dart';
+import 'package:deliveryapp/Services/Utils.dart';
 import 'package:shared_preferences/shared_preferences.dart';
-
 import '../Models/user_model.dart';
-
 class UserController{
   Future<String?>? loginController( String email, String password ) async {
 
-    final response = await http.post(Uri.parse('${URLS.URL_API}/user/authenticate'),
+    final response = await http.post(Uri.parse('${Utils.URL_API}/user/authenticate'),
         headers: { 'Accept' : 'application/json' },
         body: {
           'email' : email,
@@ -20,8 +18,8 @@ class UserController{
       _savePref(1,"email");
         return null ;
     }else {
-      var messagedata = MessageModel.fromJson( jsonDecode( response.body) );
-      return messagedata.message;
+      var messageData = MessageModel.fromJson( jsonDecode( response.body) );
+      return messageData.message;
     }
     return response.body;
   }
