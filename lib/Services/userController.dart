@@ -8,6 +8,7 @@ import '../Models/user_model.dart';
 
 class UserController{
   Future<String?>? loginController( String email, String password ) async {
+
     final response = await http.post(Uri.parse('${URLS.URL_API}/user/authenticate'),
         headers: { 'Accept' : 'application/json' },
         body: {

@@ -20,12 +20,13 @@ class FormFieldDapp extends StatelessWidget {
     this.keyboardType = TextInputType.text,
     this.maxLine = 1,
     this.readOnly = false,
-    this.validator
+    this.validator, required ValueKey<String> key,
   });
 
   @override
   Widget build(BuildContext context) {
     return TextFormField(
+      key: ValueKey(key),
       controller: controller,
       style: GoogleFonts.getFont('Roboto', fontSize: 18),
       obscureText: isPassword,

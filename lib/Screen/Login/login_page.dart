@@ -94,6 +94,7 @@ class _LoginPageState extends State<LoginPage> {
                 ),
                 const SizedBox(height: 60.0),
                 FormFieldDapp(
+                  key: ValueKey("login_email"),
                   controller: _emailController,
                   hintText: 'Email Address',
                   keyboardType: TextInputType.emailAddress,
@@ -101,6 +102,7 @@ class _LoginPageState extends State<LoginPage> {
                 ),
                 const SizedBox(height: 25.0),
                 FormFieldDapp(
+                  key: ValueKey("password"),
                   controller: _passwordController,
                   hintText: 'Password',
                   isPassword: true,
